@@ -1,0 +1,1119 @@
+<?php
+/*
+ *
+ * THIS CODE IS COPYWRITED IN 2012 BY MR. JOHN M. MCGOVERN, IT IS NOT UNDER THE GNU GPL, I AM SHARING THIS CODE WITH THINKFUL FOR THE 
+ * PURPOSE OF GETTING EMPLOYMENT AS A TEACHER ONLY. YOU MAY SEE HOW THE CODE RUNS AT http://motelhotelsearch.org.
+ *
+ *
+*/
+
+if(1)
+{
+
+@mysql_connect("HOSTNAME","DATABASENAME","PASSWORD");
+@mysql_select_db("DATABASENAME");
+
+@mysql_query("create table DATABASETABLENAME (id varchar(255),name varchar(255),pobox varchar(255),street varchar(255),city varchar(255),state varchar(255),zipcode varchar(255),stories varchar(255),phone varchar(255),propertytype varchar(255),sprinklers varchar(255),latitude varchar(255),longitude varchar(255),webpage varchar(255),googlemap varchar(255))");
+
+$str=file_get_contents("ROWSFILE.txt");
+
+$arrz=preg_split("/\n/", $str);
+
+$cnt1=0;
+$cnt2=0;
+$cnt3=0;
+
+$sz=sizeof($arrz);
+
+echo "<br />";
+echo "sz=".$sz;
+echo "<br />";
+
+//echo "<br />";
+//print_r($arrz);
+//echo "<br />";
+
+//if($handle)
+if ($sz > 0)
+{
+    //while (($buffer = fgets($handle)) !== false)
+    for($i=0;$i < $sz;++$i)
+    {
+      //$arr = explode("?",$buffer);
+      //echo $arrz[$i];
+      //echo "<br />";
+      
+      $arr = explode(",",$arrz[$i]);
+      
+  
+$num=sizeof($arr);
+if($num==12) //has both a pobox and a street address listed
+{      
+      $femaid=addslashes($arr[0]);
+      $name=addslashes($arr[1]);
+      
+      $pobox=trim(addslashes($arr[2]));
+	  
+      //if((stristr($pobox,"box") != false) || preg_match("/[0-9]+[a-z]+[A-Z]*/",$pobox) == true) //check for number only too
+	  if(preg_match("/^[0-9]+$/",$pobox) == true) //check for number only too
+      {
+      
+      $pobox1=addslashes("PO Box ".$pobox);
+
+      }
+      else if(stristr($pobox,"box") == false)
+      {
+      $pobox1='~';
+      }
+      
+      $street=trim(addslashes($arr[3]));
+      //if($street=='')
+      //$street='~';
+      $city=addslashes($arr[4]);
+      $state=addslashes($arr[5]);
+      $zipcode=addslashes($arr[6]);
+      $stories=addslashes($arr[7]);
+      $phone=addslashes($arr[8]);
+      $propertytype=addslashes($arr[9]);
+      
+     
+	    $webpage=addslashes(urldecode($arr[10]));
+      $sprinklers=addslashes($arr[11]);
+      
+            
+      
+      
+      
+if((strcasecmp($propertytype,"college\/university")==0) || (strcasecmp($propertytype,"Apartment Building")==0))
+{
+}
+else
+{
+
+$cnt1++;
+        $result = @mysql_query("INSERT INTO fematable (femaid,name,pobox,street,city,state,zipcode,stories,phone,propertytype,sprinklers,latitude,longitude,webpage,googlemap) VALUES('$femaid','$name','$pobox1','$street','$city','$state','$zipcode','$stories','$phone','$propertytype','$sprinklers','','','$webpage','')");
+}        
+        }
+        else if($num==11)
+{
+
+
+      $femaid=addslashes($arr[0]);
+      $name=addslashes($arr[1]);
+      $pobox=trim(addslashes($arr[2]));
+	  
+      //if((stristr($pobox,"box") != false) || preg_match("/[0-9]+[a-z]+[A-Z]*/",$pobox) == true)
+      
+ if((stristr($pobox,"box") == true) || preg_match("/^[0-9]+$/",$pobox) == true) //check for number only too
+      {
+      if(preg_match("/^[0-9]+$/",$pobox) == true)
+      $pobox1=addslashes("PO Box ".$pobox);
+	  
+$street='~'; //only has a pobox, not street address
+      }
+      else
+      {
+      $pobox1='~'; //no pobox, only street address
+      
+      $street=trim(addslashes($arr[2]));
+      if(strcasecmp($street,'')==0)
+      $street='~';
+      } 
+      
+      $city=addslashes($arr[3]);
+      $state=addslashes($arr[4]);
+      $zipcode=addslashes($arr[5]);
+      $stories=addslashes($arr[6]);
+      $phone=addslashes($arr[7]);
+      $propertytype=addslashes($arr[8]);
+
+	  $webpage=addslashes(urldecode($arr[9]));
+	        $sprinklers=addslashes($arr[10]);
+      
+      
+      //$cnt2++;
+  
+      
+//FEMA ID?Name?P.O. Box?Street?City?State?Zip Code?Stories?Phone?Property Type?Sprinklers
+if((strcasecmp($propertytype,"college\/university")==0) || (strcasecmp($propertytype,"Apartment Building")==0))
+{
+}
+else
+{
+$cnt2++;
+
+        $result = @mysql_query("INSERT INTO DATABASETABLENAME (id,name,pobox,street,city,state,zipcode,stories,phone,propertytype,sprinklers,latitude,longitude,webpage,googlemap) VALUES('$id','$name','$pobox1','$street','$city','$state','$zipcode','$stories','$phone','$propertytype','$sprinklers','','','$webpage','')");
+}         
+        }
+else if($num==10)
+{
+     
+      $femaid=addslashes($arr[0]);
+      $name=addslashes($arr[1]);
+      $pobox=trim(addslashes($arr[2]));
+	  
+       if((stristr($pobox,"box") == true) || preg_match("/^[0-9]+$/",$pobox) == true) //check for number only too
+      {
+      if(preg_match("/^[0-9]+$/",$pobox) == true)
+      $pobox1=addslashes("PO Box ".$pobox);
+  
+	  
+$street=''; //only has a pobox, not street address
+      }
+      else
+      {
+      $pobox1='~'; //no pobox, only street address
+      $street=trim(addslashes($arr[2]));
+      if(strcasecmp($street,'')==0)
+      $street='~';
+      } 
+      
+      $city='~';
+      $state=addslashes($arr[3]);
+      $zipcode=addslashes($arr[4]);
+      $stories=addslashes($arr[5]);
+      
+           $phone=addslashes($arr[6]);
+      $propertytype=addslashes($arr[7]);
+
+	  $webpage=addslashes(urldecode($arr[8]));
+	      $sprinklers=addslashes($arr[9]);
+      
+      //$cnt3++;
+  
+      
+//FEMA ID?Name?P.O. Box?Street?City?State?Zip Code?Stories?Phone?Property Type?Sprinklers
+if((strcasecmp($propertytype,"college\/university")==0) || (strcasecmp($propertytype,"Apartment Building")==0))
+{
+}
+else
+{
+$cnt3++;
+
+        $result = @mysql_query("INSERT INTO fematable (femaid,name,pobox,street,city,state,zipcode,stories,phone,propertytype,sprinklers,latitude,longitude,webpage,googlemap) VALUES('$femaid','$name','$pobox1','$street','$city','$state','$zipcode','$stories','$phone','$propertytype','$sprinklers','','','$webpage','')");
+} 
+  
+          
+        }
+else if($num==9)
+{
+     
+      $femaid=addslashes($arr[0]);
+      $name=addslashes($arr[1]);
+      $pobox=trim(addslashes($arr[2]));
+	  
+      //if((stristr($pobox,"box") != false) || preg_match("/[0-9]+[a-z]+[A-Z]*/",$pobox) == true) //check for number only too
+	  if((stristr($pobox,"box") == true) || preg_match("/^[0-9]+$/",$pobox) == true) //check for number only too
+      {
+      if(preg_match("/^[0-9]+$/",$pobox) == true)
+      $pobox1=addslashes("PO Box ".$pobox);
+
+$street='~'; //only has a pobox, not street address
+      }
+      else
+      {
+      $pobox1='~'; //no pobox, only street address
+      $street=trim(addslashes($arr[2]));
+      if(strcasecmp($street,'')==0)
+      $street='~';
+      } 
+      
+      $city='~';
+      $state=addslashes($arr[3]);
+      $zipcode='~';
+      $stories=addslashes($arr[4]);
+      
+           $phone=addslashes($arr[5]);
+      $propertytype=addslashes($arr[6]);
+  
+	  $webpage=addslashes(urldecode($arr[7]));
+	      $sprinklers=addslashes($arr[8]);
+      
+      //$cnt4++;
+  
+      
+//FEMA ID?Name?P.O. Box?Street?City?State?Zip Code?Stories?Phone?Property Type?Sprinklers
+if((strcasecmp($propertytype,"college\/university")==0) || (strcasecmp($propertytype,"Apartment Building")==0))
+{
+}
+else
+{
+$cnt4++;
+
+        $result = @mysql_query("INSERT INTO fematable (femaid,name,pobox,street,city,state,zipcode,stories,phone,propertytype,sprinklers,latitude,longitude,webpage,googlemap) VALUES('$femaid','$name','$pobox1','$street','$city','$state','$zipcode','$stories','$phone','$propertytype','$sprinklers','','','$webpage','')");
+} 
+  
+          
+        }
+     
+
+    }//for
+    
+    
+    
+}//if
+
+
+
+@mysql_close();
+
+$total=$cnt1+$cnt2+$cnt3+$cnt4;
+echo "<br />total=$total<br />";
+
+}
+
+?>
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="keywords" content="motel,hotel,accommodations,accommodation,search,travel,vacation">
+<meta name="author" content="Johnny McGovern">
+
+<meta name='description' content='Do you need accommodations for the night? You have come to the right place.' />
+<title>THE MOTEL or HOTEL SEARCH SERVICE</title>
+<style>
+body{font-family:"Veranda", Times, serif;} 
+</style>
+
+<!--
+I got these two links from http://favicon.htmlkit.com/favicon/ which display the icon in the address bar of the browser
+-->
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="icon" type="image/gif" href="animated_favicon1.gif">
+
+
+<script src="jquery.js"></script>
+
+<script type="text/javascript">  
+          $(document).ready(function(){  
+            $("#stateform").submit(function(event) {  
+      
+                /* stop form from submitting normally */  
+                event.preventDefault();
+                
+                //alert("made it")
+                var sd= $('#stateform').serialize()
+                var pdata=sd;
+                //alert(pdata)
+$("#imgAjaxLoader1").show();                
+        $.get('pf.php',pdata,function(data)
+        {
+        $("#imgAjaxLoader1").hide();
+        $('#result').find('#form_result').html(data);
+        })
+               
+
+              });  
+          });  
+        </script>  
+        
+<script type="text/javascript">  
+function Clear()
+{//alert(1)
+document.getElementById('form_result').innerHTML=''
+}
+</script>  
+
+
+<script  type='text/javascript'>
+<!--
+function getdummy()
+{
+return Math.random()
+}
+//-->
+</script>
+
+
+
+<script type='text/javascript'>
+<!--
+function confirmsortonpropertytype(state,city,street,hotelmotelname,zipcode)
+{
+//alert(1)
+/*
+alert(state)
+alert(city)
+alert(street)
+alert(hotelmotelname)
+alert(zipcode)
+*/
+//in progress selection
+//alert(name)
+
+var dummy = getdummy()
+//alert(dummy)
+
+//var state='Alabama'
+//var city=''
+//var street=''
+
+var pdata="dummy="+dummy+"&STATE="+state+"&city="+city+"&street="+street+"&hotelmotel="+hotelmotelname+"&zipcode="+zipcode
+
+
+//alert(pdata)
+
+//ajaxSetup({async:true})
+
+//alert('calling sortbyname.php')
+
+$("#imgAjaxLoader1").show();
+
+$.get('sortbypropertytype.php',pdata,function(data)
+{
+$("#imgAjaxLoader1").hide();
+    //alert(data);
+    //$("#imgAjaxLoader2").hide();
+
+    //alert('just before calling empty')
+    $('#form_result').empty();
+    $('#result').find('#form_result').html(data);
+
+    //return true;
+})
+
+
+//}
+
+
+}
+//-->
+</script>
+
+<script type='text/javascript'>
+<!--
+function confirmsortonstate(state,city,street,hotelmotelname,zipcode)
+{
+//alert(1)
+/*
+alert(state)
+alert(city)
+alert(street)
+alert(hotelmotelname)
+alert(zipcode)
+*/
+//in progress selection
+//alert(name)
+
+var dummy = getdummy()
+//alert(dummy)
+
+//var state='Alabama'
+//var city=''
+//var street=''
+
+var pdata="dummy="+dummy+"&STATE="+state+"&city="+city+"&street="+street+"&hotelmotel="+hotelmotelname+"&zipcode="+zipcode
+
+
+//alert(pdata)
+
+//ajaxSetup({async:true})
+
+//alert('calling sortbyname.php')
+
+$("#imgAjaxLoader1").show();
+
+$.get('sortbystate.php',pdata,function(data)
+{
+$("#imgAjaxLoader1").hide();
+    //alert(data);
+    //$("#imgAjaxLoader2").hide();
+
+    //alert('just before calling empty')
+    $('#form_result').empty();
+    $('#result').find('#form_result').html(data);
+
+    //return true;
+})
+
+
+//}
+
+
+}
+//-->
+</script>
+
+
+
+<script type='text/javascript'>
+<!--
+function confirmsortonpobox(state,city,street,hotelmotelname,zipcode)
+{
+//alert(1)
+/*
+alert(state)
+alert(city)
+alert(street)
+alert(hotelmotelname)
+alert(zipcode)
+*/
+//in progress selection
+//alert(name)
+
+var dummy = getdummy()
+//alert(dummy)
+
+//var state='Alabama'
+//var city=''
+//var street=''
+
+var pdata="dummy="+dummy+"&STATE="+state+"&city="+city+"&street="+street+"&hotelmotel="+hotelmotelname+"&zipcode="+zipcode
+
+
+
+//alert(pdata)
+
+//ajaxSetup({async:true})
+
+//alert('calling sortbyname.php')
+
+$("#imgAjaxLoader1").show();
+
+$.get('sortbypobox.php',pdata,function(data)
+{
+$("#imgAjaxLoader1").hide();
+    //alert(data);
+    //$("#imgAjaxLoader2").hide();
+
+    //alert('just before calling empty')
+    $('#form_result').empty();
+    $('#result').find('#form_result').html(data);
+
+    //return true;
+})
+
+
+//}
+
+
+}
+//-->
+</script>
+
+
+<script type='text/javascript'>
+<!--
+function confirmsortonname(state,city,street,hotelmotelname,zipcode)
+{
+/*
+alert(state)
+alert(city)
+alert(street)
+alert(hotelmotelname)
+alert(zipcode)
+*/
+
+//alert(1)
+
+//in progress selection
+//alert(name)
+
+var dummy = getdummy()
+//alert(dummy)
+
+//var state='Alabama'
+//var city=''
+//var street=''
+
+var pdata="dummy="+dummy+"&STATE="+state+"&city="+city+"&street="+street+"&hotelmotel="+hotelmotelname+"&zipcode="+zipcode
+
+//alert(pdata)
+
+//ajaxSetup({async:true})
+
+//alert('calling sortbyname.php')
+
+$("#imgAjaxLoader1").show();
+
+$.get('sortbyname.php',pdata,function(data)
+{
+$("#imgAjaxLoader1").hide();
+    //alert(data);
+    //$("#imgAjaxLoader2").hide();
+
+    //alert('just before calling empty')
+    $('#form_result').empty();
+    $('#result').find('#form_result').html(data);
+
+    //return true;
+})
+
+
+//}
+
+
+}
+//-->
+</script>
+
+
+<script type='text/javascript'>
+<!--
+function confirmsortonstreet(state,city,street,hotelmotelname,zipcode)
+{
+//alert(1)
+/*
+alert(state)
+alert(city)
+alert(street)
+alert(hotelmotelname)
+alert(zipcode)
+*/
+//in progress selection
+//alert(name)
+
+var dummy = getdummy()
+//alert(dummy)
+
+//var state='Alabama'
+//var city=''
+//var street=''
+
+var pdata="dummy="+dummy+"&STATE="+state+"&city="+city+"&street="+street+"&hotelmotel="+hotelmotelname+"&zipcode="+zipcode
+
+
+
+//alert(pdata)
+
+//ajaxSetup({async:true})
+
+//alert('calling sortbyname.php')
+
+$("#imgAjaxLoader1").show();
+
+$.get('sortbystreet.php',pdata,function(data)
+{
+$("#imgAjaxLoader1").hide();
+    //alert(data);
+    //$("#imgAjaxLoader2").hide();
+
+    //alert('just before calling empty')
+    $('#form_result').empty();
+    $('#result').find('#form_result').html(data);
+
+    //return true;
+})
+
+
+//}
+
+
+}
+//-->
+</script>
+
+<script type='text/javascript'>
+<!--
+function confirmsortonphonenumber(state,city,street,hotelmotelname,zipcode)
+{
+//alert(1)
+/*
+alert(state)
+alert(city)
+alert(street)
+alert(hotelmotelname)
+alert(zipcode)
+*/
+//in progress selection
+//alert(name)
+
+var dummy = getdummy()
+//alert(dummy)
+
+//var state='Alabama'
+//var city=''
+//var street=''
+
+var pdata="dummy="+dummy+"&STATE="+state+"&city="+city+"&street="+street+"&hotelmotel="+hotelmotelname+"&zipcode="+zipcode
+
+
+
+//alert(pdata)
+
+//ajaxSetup({async:true})
+
+//alert('calling sortbyname.php')
+
+$("#imgAjaxLoader1").show();
+
+$.get('sortbyphonenumber.php',pdata,function(data)
+{
+$("#imgAjaxLoader1").hide();
+    //alert(data);
+    //$("#imgAjaxLoader2").hide();
+
+    //alert('just before calling empty')
+    $('#form_result').empty();
+    $('#result').find('#form_result').html(data);
+
+    //return true;
+})
+
+
+//}
+
+
+}
+//-->
+</script>
+
+<script type='text/javascript'>
+<!--
+function confirmsortoncity(state,city,street,hotelmotelname,zipcode)
+{
+//alert(1)
+/*
+alert(state)
+alert(city)
+alert(street)
+alert(hotelmotelname)
+alert(zipcode)
+*/
+//in progress selection
+//alert(name)
+
+var dummy = getdummy()
+//alert(dummy)
+
+//var state='Alabama'
+//var city=''
+//var street=''
+
+var pdata="dummy="+dummy+"&STATE="+state+"&city="+city+"&street="+street+"&hotelmotel="+hotelmotelname+"&zipcode="+zipcode
+
+
+
+//alert(pdata)
+
+//ajaxSetup({async:true})
+
+//alert('calling sortbyname.php')
+
+$("#imgAjaxLoader1").show();
+
+$.get('sortbycity.php',pdata,function(data)
+{
+$("#imgAjaxLoader1").hide();
+    //alert(data);
+    //$("#imgAjaxLoader2").hide();
+
+    //alert('just before calling empty')
+    $('#form_result').empty();
+    $('#result').find('#form_result').html(data);
+
+    //return true;
+})
+
+
+//}
+
+
+}
+//-->
+</script>
+
+<script type='text/javascript'>
+<!--
+function confirmsortonzipcode(state,city,street,hotelmotelname,zipcode)
+{
+//alert(1)
+/*
+alert(state)
+alert(city)
+alert(street)
+alert(hotelmotelname)
+alert(zipcode)
+*/
+//in progress selection
+//alert(name)
+
+var dummy = getdummy()
+//alert(dummy)
+
+//var state='Alabama'
+//var city=''
+//var street=''
+
+var pdata="dummy="+dummy+"&STATE="+state+"&city="+city+"&street="+street+"&hotelmotel="+hotelmotelname+"&zipcode="+zipcode
+
+
+
+//alert(pdata)
+
+//ajaxSetup({async:true})
+
+//alert('calling sortbyname.php')
+
+$("#imgAjaxLoader1").show();
+
+$.get('sortbyzipcode.php',pdata,function(data)
+{
+$("#imgAjaxLoader1").hide();
+    //alert(data);
+    //$("#imgAjaxLoader2").hide();
+
+    //alert('just before calling empty')
+    $('#form_result').empty();
+    $('#result').find('#form_result').html(data);
+
+    //return true;
+})
+
+
+//}
+
+
+}
+//-->
+</script>
+
+<script type="text/javascript">
+
+function countloads()
+{
+
+/*
+$.get('countloads.php',pdata,function(data)
+{
+}
+)
+*/
+
+}
+
+</script>
+
+
+
+</head>
+<body onload="countloads()">
+
+<!--
+<a style='position:absolute; left:30px; top:30px; align:top' href="http://www.radiotuna.com" target="_blank">Radio Stations</a>
+-->
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-37334215-2', 'motelhotelsearch.org');
+  ga('send', 'pageview');
+
+</script>
+
+<div style="position:absolute; left:555px;">
+<a href="http://picons.me/index.php" target="_blank"><img src='png/p.png' style="width:100px; height:100px;" /></a>
+</div>
+
+<div style="position:absolute; left:645px;">
+<a href="http://ndesign-studio.com/blog/free-marker-style-icon-set" target="_blank"><img src='png/home6464.png' /></a>
+</div>
+
+<div style="position:absolute; left:696px;">
+<a href="http://picons.me/index.php" target="_blank"><img src='png/p.png' style="width:100px; height:100px;" /></a>
+</div>
+
+<center style="width:86px; height:86px"></center>
+
+<!--
+<center><img src='png/p.png' style=poosition:absolute; left: top: width:100px; height:100px;" /><img src='png/home6464.png' /><img src='png/p.png' style="width:100px; height:100px;" /></center><br />
+-->
+
+
+<div style='position:absolute; left:375px; top:275px; color:#ffcc99'>
+<span style=''>Search Side</span>
+</div>
+
+<div style='position:absolute; left:1000px; top:275px; color:#ffcc99'>
+<span style=''>Citations and Advertisements Side</span>
+</div>
+
+<!--
+<div style='position:absolute; left:900px; top:315px; border:1px solid black; padding-left:5px; padding-top:5px; padding-right:5px; padding-bottom:10px;'>
+
+<center style='color:green'>For sale at <a href='amazonkindle6iad.php' target='_blank'>amazon.com</a></center><br />
+<a href="http://www.amazon.com/gp/product/B007HCCNJU/ref=as_li_qf_sp_asin_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B007HCCNJU&linkCode=as2&tag=johnmalcmcgos-20" target="_blank">Kindle, 6" E Ink Display, Wi-Fi - Includes Special Offers (Black)</a><img src="http://www.assoc-amazon.com/e/ir?t=johnmalcmcgos-20&l=as2&o=1&a=B007HCCNJU" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+
+
+</div>
+-->
+
+<!--
+<div style="position:absolute; left:950px; width: 360px; top:395px; border:1px solid black; padding:10px 10px; height:35px;">
+<a href="http://www.usatravelmagazine.com/" target="_blank">USA Travel Magazine (A source for activities)</a>
+</div>
+-->
+
+
+<div style='position:absolute; left:950px; width: 150px; top:315px; border:1px solid black; padding:10px 10px;'>
+
+<!--
+<table>
+<thead>Other sites that may be helpful to find a motel or hotel</thead>
+<thead> with their <a href="http://www.alexa.com" target="_blank">alexa</a> popularity:</thead>
+<tr>
+<td><a href="http://hotelscombined.com" target="_blank">Hotels combined</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.hotelscombined.com&r=home_home&p=bigtop" target="_blank">Pop</a></td>
+<td><a style='margin-left:30px;' href="http://travel.aol.com/hotels" target="_blank">Aol travel</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=travel.aol.com%2Fhotels&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+</tr>
+<tr>
+<td><a href="http://www.choicehotels.com" target="_blank">Choice hotels</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.choicehotels.com&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+<td><a style='margin-left:30px;' style='margin-left:30px;' href="http://www.hotwire.com/hotel/index.jsp" target="_blank">Hotwire hotels</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.hotwire.com%2Fhotel%2Findex.jsp&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+</tr>
+<tr>
+<td><a href="http://www.travelocity.com/Hotels" target="_blank">Travelocity</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.travelocity.com%2FHotels&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+<td><a style='margin-left:30px;' style='margin-left:30px;' href="http://www.orbitz.com/hotels" target="_blank">Orbitz</a></td></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.orbitz.com%2Fhotels&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+</tr>
+<tr>
+<td><a href="http://www.kayak.com/hotels" target="_blank">Kayak hotels</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.kayak.com%2Fhotels&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+<td><a style='margin-left:30px;' href="http://www.expedia.com/Hotels" target="_blank">Expedia hotels</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.expedia.com%2FHotels&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+</tr>
+<tr>
+<td><a href="http://www.priceline.com/hotels" target="_blank">Priceline hotels</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.priceline.com%2Fhotels&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+<td><a style='margin-left:30px;' href="http://www.venere.com" target="_blank">Venere hotels</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.venere.com&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+</tr>
+<tr>
+<td><a href="http://www.hotels.com" target="_blank">Hotels</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.hotels.com&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+<td><a style='margin-left:30px;' href="http://www.motel.com" target="_blank">Motel</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.motel.com&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+</tr>
+<tr>
+<td><a href="https://www.google.com/hotelfinder/#search;si=44cab4b0;av=r" target="_blank">Google Hotel finder</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=https%3A%2F%2Fwww.google.com%2Fhotelfinder%2F%23search%3Bsi%3D44cab4b0%3Bav%3Dr&r=home_home&p=bigtop" target="_blank">Pop</a></td>
+<td><a style='margin-left:30px;' href="http://www.trivago.com" target="_blank">Trivago</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=trivago.com&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+</tr>
+</table>
+-->
+
+
+<table>
+<thead>Other sites with their <a href="http://www.alexa.com" target="_blank">alexa</a> (Pop)ularity</thead>
+<tr>
+<td><a href="http://hotelscombined.com" target="_blank">Hotels combined</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.hotelscombined.com&r=home_home&p=bigtop" target="_blank">Pop</a></td></tr><tr>
+<td><a style='margin-left:0px;' href="http://travel.aol.com/hotels" target="_blank">Aol travel</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=travel.aol.com%2Fhotels&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+</tr>
+<tr>
+<td><a href="http://www.choicehotels.com" target="_blank">Choice hotels</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.choicehotels.com&r=site_screener&p=bigtop" target="_blank">Pop</a></td></tr><tr>
+<td><a style='margin-left:0px;' style='margin-left:30px;' href="http://www.hotwire.com/hotel/index.jsp" target="_blank">Hotwire hotels</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.hotwire.com%2Fhotel%2Findex.jsp&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+</tr>
+<tr>
+<td><a href="http://www.travelocity.com/Hotels" target="_blank">Travelocity</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.travelocity.com%2FHotels&r=site_screener&p=bigtop" target="_blank">Pop</a></td></tr><tr>
+<td><a style='margin-left:0px;' style='margin-left:30px;' href="http://www.orbitz.com/hotels" target="_blank">Orbitz</a></td></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.orbitz.com%2Fhotels&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+</tr>
+<tr>
+<td><a href="http://www.kayak.com/hotels" target="_blank">Kayak hotels</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.kayak.com%2Fhotels&r=site_screener&p=bigtop" target="_blank">Pop</a></td></tr><tr>
+<td><a style='margin-left:0px;' href="http://www.expedia.com/Hotels" target="_blank">Expedia hotels</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.expedia.com%2FHotels&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+</tr>
+<tr>
+<td><a href="http://www.priceline.com/hotels" target="_blank">Priceline hotels</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.priceline.com%2Fhotels&r=site_screener&p=bigtop" target="_blank">Pop</a></td></tr><tr>
+<td><a style='margin-left:0px;' href="http://www.venere.com" target="_blank">Venere hotels</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.venere.com&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+</tr>
+<tr>
+<td><a href="http://www.hotels.com" target="_blank">Hotels</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.hotels.com&r=site_screener&p=bigtop" target="_blank">Pop</a></td></tr><tr>
+<td><a style='margin-left:0px;' href="http://www.motel.com" target="_blank">Motel</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=www.motel.com&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+</tr>
+<tr>
+<td><a href="https://www.google.com/hotelfinder/#search;si=44cab4b0;av=r" target="_blank">Google Hotel finder</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=https%3A%2F%2Fwww.google.com%2Fhotelfinder%2F%23search%3Bsi%3D44cab4b0%3Bav%3Dr&r=home_home&p=bigtop" target="_blank">Pop</a></td></tr><tr>
+<td><a style='margin-left:0px;' href="http://www.trivago.com" target="_blank">Trivago</a></td><td>   </td><td><a href="http://www.alexa.com/search?q=trivago.com&r=site_screener&p=bigtop" target="_blank">Pop</a></td>
+</tr>
+</table>
+
+</div>
+
+<div style='position:absolute; left:1150px; width: 150px; top:305px; border:0px solid black; padding:10px 10px;'>
+<!--
+<iframe src="http://rcm.amazon.com/e/cm?t=johnmalcmcgos-20&o=1&p=8&l=as1&asins=B007HCCNJU&ref=qf_sp_asin_til&fc1=000000&IS2=1&lt1=_blank&m=amazon&lc1=0000FF&bc1=000000&bg1=FFFFFF&f=ifr" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+-->
+
+<iframe src="http://rcm-na.amazon-adsystem.com/e/cm?t=johnmalcmcgos-20&o=1&p=8&l=as1&asins=B00B2JKYHM&ref=qf_sp_asin_til&fc1=000000&IS2=1&lt1=_blank&m=amazon&lc1=0000FF&bc1=000000&bg1=FFFFFF&f=ifr" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+</div>
+
+
+
+
+<style>
+.ajaxLoader1 {
+position: fixed;
+top: 50%;
+left: 50%;
+margin-top: -24px;
+margin-left: -24px;
+z-index: 100;
+display: none;
+}
+</style>
+
+
+
+<img style="" id="imgAjaxLoader1" class="ajaxLoader1" src="circleprogressindicator/ajax-loader2.gif" />
+
+
+
+<center style="font-variant:small-caps; font-size:17px">The motel or hotel search service</center>
+<br />
+<center>Whether you are a vacationer, traveler or just looking for a place to stay, this web tool may help you find accommodations for the night. So far, my database has 43,035 motel and hotel accommodation sources. The <a href="http://www.census.gov/econ/industry/hierarchy/i721.htm"l target="_blank">United States 2007 Census</a> reports that their were 53,103 of them. In many cases, genuine websites exist for the accommodations, you can navigate to the page associated with the source from either the motel or hotel name or the "Web page" link from the displayed results and it will appear in its own browser tab. The only data that is needed to do a search is a choice for state, other than that, you can enter data in the other four fields in any known combination and empty fields are ok. Results appear after the "Activate Search" button is pressed. Seven column sort buttons are provided with the search results to help locate your accommodation. Also provided in the results is a "Google map" link for directions. I hope that you enjoy this site. -- John M. </center><img style='position:absolute; top:220px; left:1165px; width:50px; height:35px;' src='profile.png'  />
+<br /><br />
+
+<!--
+<div style='border:1px solid blue'>
+<center style='color:red; font-size:10px; padding-left:10px; padding-right:10px; padding-top:10px; padding-bottom:10px'>Advertisement</center>
+<br />
+ATTENTION MOTELS
+Advertising Page for your motel
+Price: $500.00 to build it and advertise it.
+The maintenance fee is $100.00 per month with 30% off so $70.00/month with the first two months free.
+Benefit: Increase business to your motel through visits to your web page on the internet and a free placement into my United States hotel motel directory.(661)538-0522.
+</div>
+-->
+
+<div id='id_stateform'></div>
+
+<script type="text/JavaScript">
+
+function showPressed(ID)
+
+{
+
+document.getElementById(ID).style.borderLeftColor = "rgb(128,0,128)"; 
+
+document.getElementById(ID).style.borderTopColor = "rgb(128,0,128)"; 
+
+document.getElementById(ID).style.borderRightColor = "rgb(238,130,238)"; 
+
+document.getElementById(ID).style.borderBottomColor = "rgb(238,130,238)"; 
+
+}
+
+function unPressed(ID)
+
+{
+
+document.getElementById(ID).style.borderLeftColor = "rgb(238,130,238)"; 
+
+document.getElementById(ID).style.borderTopColor = "rgb(238,130,238)";
+
+document.getElementById(ID).style.borderRightColor = "rgb(128,0,128)"; 
+
+document.getElementById(ID).style.borderBottomColor = "rgb(128,0,128)"; 
+
+}
+
+</script>
+
+<br /><br />
+
+<!--
+<div style='background-color:#A5EF00; width:875px; height:300px'>
+-->
+
+<div style='background-color:#ffcc99; width:875px; height:300px; border:2px solid #ffcc66;'>
+<span style='margin-left:75px;'>In this area, enter the search data and push the button for the motel/hotel list:</span><br /><br />
+
+<form action="pf.php" name='stateform' id='stateform' method="post" enctype="multipart/form-data">
+<div style='margin-left:75px;'><select name="STATE" id="STATE">
+<option>--The State--</option>
+<option value="AL">ALABAMA</option>
+                          <option value="AK">ALASKA</option>
+                          <option value="AZ">ARIZONA</option>
+                        <option value="AR">ARKANSAS</option>
+                      <option value="CA">CALIFORNIA</option>
+                        <option value="CO">COLORADO</option>
+                     <option value="CT">CONNECTICUT</option>
+                        <option value="DE">DELAWARE</option>
+            <option value="DC">DISTRICT OF COLUMBIA</option>
+                         <option value="FL">FLORIDA</option>
+                         <option value="GA">GEORGIA</option>
+                          <option value="HI">HAWAII</option>
+                           <option value="ID">IDAHO</option>
+                        <option value="IL">ILLINOIS</option>
+                         <option value="IN">INDIANA</option>
+                            <option value="IA">IOWA</option>
+                          <option value="KS">KANSAS</option>
+                        <option value="KY">KENTUCKY</option>
+                       <option value="LA">LOUISIANA</option>
+                           <option value="ME">MAINE</option>
+                        <option value="MD">MARYLAND</option>
+                   <option value="MA">MASSACHUSETTS</option>
+                        <option value="MI">MICHIGAN</option>
+                       <option value="MN">MINNESOTA</option>
+                     <option value="MS">MISSISSIPPI</option>
+                        <option value="MO">MISSOURI</option>
+                         <option value="MT">MONTANA</option>
+                        <option value="NE">NEBRASKA</option>
+                          <option value="NV">NEVADA</option>
+                   <option value="NH">NEW HAMPSHIRE</option>
+                      <option value="NJ">NEW JERSEY</option>
+                      <option value="NM">NEW MEXICO</option>
+                        <option value="NY">NEW YORK</option>
+                  <option value="NC">NORTH CAROLINA</option>
+                    <option value="ND">NORTH DAKOTA</option>
+                            <option value="OH">OHIO</option>
+                        <option value="OK">OKLAHOMA</option>
+                          <option value="OR">OREGON</option>
+                    <option value="PA">PENNSYLVANIA</option>
+                    <option value="RI">RHODE ISLAND</option>
+                  <option value="SC">SOUTH CAROLINA</option>
+                    <option value="SD">SOUTH DAKOTA</option>
+                       <option value="TN">TENNESSEE</option>
+                           <option value="TX">TEXAS</option>
+                            <option value="UT">UTAH</option>
+                         <option value="VT">VERMONT</option>
+                        <option value="VA">VIRGINIA</option>
+                      <option value="WA">WASHINGTON</option>
+                   <option value="WV">WEST VIRGINIA</option>
+                       <option value="WI">WISCONSIN</option>
+                         <option value="WY">WYOMING</option>
+</select></div><br /><br />
+<div style='margin-left:300px;margin-top:-63px;'>
+<div style='margin-left:0px;'>The hotel name or motel name (partial name,ok): <input type='text' name='hotelmotel' id='hotelmotel'  maxlength="50" size="30" /></div><br />
+
+<div style='margin-left:0px;'>The city: <input type='text' name='city' id='city' maxlength="50" size="30"  /></div><br />
+<div style='margin-left:0px;'>The street (partial name,ok): <input type='text' name='street' id='street' maxlength="50" size="30" /></div><br />
+<div style='margin-left:0px;'>The zipcode: <input type='text' name='zipcode' id='zipcode' maxlength=10 size=10 /></div>
+</div>
+
+
+<div style='clear:left; margin-left:300px;'>
+<br /><br />
+<!--
+<button type="submit" name="submit" id="B1" onmousedown="showPressed('B1')" onmouseup="unPressed('B1')" ><b>Press this search activation button for the motel(s) and hotel(s) list.</b></button>
+-->
+<button type="submit" name="submit" id="B1" onmousedown="showPressed('B1')" onmouseup="unPressed('B1')" ><b>Activate Search</b></button>
+<!--
+<button type="button" onclick="Clear()" id="B1" onmousedown="showPressed('B1')" onmouseup="unPressed('B1')" ><b>Press this button to erase the displayed list.</b></button>
+-->
+
+</div>
+</form>
+</div>
+
+<div style='margin-top:160px; color:orange' id='result'><hr><div style='color:black' id='form_result'><br /><center style='color:orange'>After the search activation, the results appear here.</center></div><div style="color:black;"></div></div>
+
+<br />
+<hr />
+<style>
+img#profileid
+{
+transform: rotate(30deg);
+-ms-transform: rotate(30deg); /* IE 9 */
+-webkit-transform: rotate(30deg); /* Safari and Chrome */
+} 
+</style>
+<br /><br />
+<img id='profileid' style='width:150px; height:85px;' src='profile.png'  />
+<br /><br /><br />
+<span style='font-size:12px'>
+Hi, my name is Johnny McGovern and I am the web developer of this site.<br />
+My School: The University of Nevada Reno (UNR) Go Wolfpack!<br />
+My Degree: Bachelor's of Science<br />
+My Major: Computer Science<br />
+Graduated: Yes<br />
+<a href='http://www.unr.edu/nevada-today/news/2012/wolfie-jr-wins-national-title'>Wolfie Jr. was our little 2011 UNR mascot National Champion</a>
+</span>
+<br /><br />
+<center><img src='png/home1616.png' /> motelhotelsearch.org copyright 2013, <a href='tos/index.php'>Terms</a></center>
+</body>
+</html>
